@@ -1,0 +1,129 @@
+﻿<Window x:Class="EquipMaster.Views.Equipment.EquipmentListWindow" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:EquipMaster.ViewModels"
+        Title="Список оборудования"
+        Height="600" Width="1200"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:EquipmentListViewModel/>
+    </Window.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Поиск+кнопка -->
+            <RowDefinition Height="Auto"/>
+            <!-- Диапазоны дат -->
+            <RowDefinition Height="Auto"/>
+            <!-- Доп. фильтры -->
+            <RowDefinition Height="*"/>
+            <!-- Таблица -->
+            <RowDefinition Height="Auto"/>
+            <!-- Кнопки CRUD -->
+        </Grid.RowDefinitions>
+
+        <!-- Поиск и Очистить -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,5">
+            <Label Content="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Width="300"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Поиск по №, Модель, Тип, Пользователь или дате"/>
+            <Button Content="Очистить фильтры"
+                    Margin="10,0,0,0"
+                    Padding="6,3"
+                    Command="{Binding ClearFiltersCommand}"/>
+        </StackPanel>
+
+        <!-- Диапазоны дат -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="Дата покупки с:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <DatePicker SelectedDate="{Binding PurchaseFrom}" Width="120"/>
+            <Label Content="по:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+            <DatePicker SelectedDate="{Binding PurchaseTo}" Width="120"/>
+
+            <Label Content="   След. ТО с:" VerticalAlignment="Center" Margin="20,0,5,0"/>
+            <DatePicker SelectedDate="{Binding NextMaintFrom}" Width="120"/>
+            <Label Content="по:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+            <DatePicker SelectedDate="{Binding NextMaintTo}" Width="120"/>
+
+            <Label Content="   Послед. ТО с:" VerticalAlignment="Center" Margin="20,0,5,0"/>
+            <DatePicker SelectedDate="{Binding LastMaintFrom}" Width="120"/>
+            <Label Content="по:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+            <DatePicker SelectedDate="{Binding LastMaintTo}" Width="120"/>
+
+            <Label Content="   Списание с:" VerticalAlignment="Center" Margin="20,0,5,0"/>
+            <DatePicker SelectedDate="{Binding DecommissionFrom}" Width="120"/>
+            <Label Content="по:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+            <DatePicker SelectedDate="{Binding DecommissionTo}" Width="120"/>
+        </StackPanel>
+
+        <!-- Дополнительные фильтры -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="Тип оборудования:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <ComboBox Width="200" 
+                      ItemsSource="{Binding EquipmentTypes}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding SelectedEquipmentTypeId}"/>
+
+            <Label Content="   Пользователь:" VerticalAlignment="Center" Margin="20,0,5,0"/>
+            <ComboBox Width="200" 
+                      ItemsSource="{Binding Users}"
+                      DisplayMemberPath="FullName"
+                      SelectedValuePath="Id"
+                      SelectedValue="{Binding SelectedUserId}"/>
+        </StackPanel>
+
+        <!-- Таблица -->
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding EquipmentsView}"
+                  SelectedItem="{Binding SelectedEquipment}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="True"
+                  Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Сер. №"
+                                    Binding="{Binding SerialNumber}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="Модель"
+                                    Binding="{Binding Model}"
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Тип"
+                                    Binding="{Binding EquipmentTypeName}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="Пользователь"
+                                    Binding="{Binding AssignedUserName}"
+                                    Width="2*"/>
+                <DataGridTextColumn Header="Статус"
+                                    Binding="{Binding StatusDisplay}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="Дата покупки"
+                                    Binding="{Binding PurchaseDate, StringFormat={}{0:dd.MM.yyyy}}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="Послед. ТО"
+                                    Binding="{Binding LastMaintenanceDate, StringFormat={}{0:dd.MM.yyyy}}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="След. ТО"
+                                    Binding="{Binding NextMaintenanceDate, StringFormat={}{0:dd.MM.yyyy}}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="Дата списания"
+                                    Binding="{Binding DecommissionDate, StringFormat={}{0:dd.MM.yyyy}}"
+                                    Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Кнопки CRUD -->
+        <!-- Кнопки CRUD -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Обновить"    Width="100" Margin="0,0,10,0" Command="{Binding RefreshCommand}"/>
+            <Button Content="Добавить"    Width="100" Margin="0,0,10,0" Command="{Binding AddCommand}"/>
+            <Button Content="Редактировать" Width="100" Margin="0,0,10,0" Command="{Binding EditCommand}"/>
+            <Button Content="Удалить"     Width="100"                     Command="{Binding DeleteCommand}"
+            ToolTip="Полное удаление оборудования из базы данных"/>
+        </StackPanel>
+    </Grid>
+</Window>

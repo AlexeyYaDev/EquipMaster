@@ -1,0 +1,107 @@
+﻿<Window x:Class="EquipMaster.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Учёт оборудования"
+        Height="759" Width="1102"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <!-- Базовый стиль для всех кнопок -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#444444"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#555555"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#222222"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Стиль для навигационных кнопок -->
+        <Style x:Key="NavButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Margin" Value="10,5"/>
+        </Style>
+        <!-- Стиль для кнопок действий в шапке и контенте -->
+        <Style x:Key="ActionButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="222"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая панель -->
+        <StackPanel Background="#333333" Grid.Column="0" Margin="0,0,1,0">
+            <TextBlock Text="Меню"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       FontSize="18"
+                       Margin="10,20,10,10"
+                       HorizontalAlignment="Center"/>
+            <Separator Margin="10"/>
+
+            <Button Content="👤 Пользователи" Style="{StaticResource NavButtonStyle}" Click="OpenUsers_Click"/>
+            <Button Content="📦 Оборудование" Style="{StaticResource NavButtonStyle}" Click="OpenEquipment_Click"/>
+            <Button Content="👥 Выдача оборудования" Style="{StaticResource NavButtonStyle}" Click="OpenAssignment_Click"/>
+            <Button Content="🔁 Возврат оборудования" Style="{StaticResource NavButtonStyle}" Click="OpenReturn_Click"/>
+            <Button Content="📜 История перемещений" Style="{StaticResource NavButtonStyle}" Click="OpenAssignmentHistory_Click"/>
+            <Button Content="🛠 Журнал обслуживания" Style="{StaticResource NavButtonStyle}" Click="OpenMaintenance_Click"/>
+            <Button Content="📅 Напоминания ТО" Style="{StaticResource NavButtonStyle}" Click="OpenUpcomingMaintenance_Click"/>
+            <Button Content="📊 Отчёты" Style="{StaticResource NavButtonStyle}" Click="OpenReports_Click"/>
+            <StackPanel Height="20"/>
+            <Button Content="📋 Журнал действий" Style="{StaticResource NavButtonStyle}" Click="OpenLogEntries_Click"/>
+            <Button Content="🚪 Выход" Style="{StaticResource NavButtonStyle}" Click="Exit_Click"/>
+        </StackPanel>
+
+        <!-- Правая область с контентом и кнопкой справки -->
+        <Border Grid.Column="1"
+                Margin="20"
+                Background="White"
+                BorderBrush="#CCCCCC"
+                BorderThickness="1"
+                CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                    <Button Content="🔄 Обновить Dashboard"
+                            Style="{StaticResource ActionButtonStyle}"
+                            Click="RefreshDashboard_Click"/>
+                    <Button Content="❓ Как работать?"
+                            Style="{StaticResource ActionButtonStyle}"
+                            Click="HelpButton_Click"/>
+                </StackPanel>
+
+                <ContentControl x:Name="MainContent" Grid.Row="1" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

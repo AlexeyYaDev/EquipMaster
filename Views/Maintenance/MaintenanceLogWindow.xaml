@@ -1,0 +1,95 @@
+﻿<Window x:Class="EquipMaster.Views.Maintenance.MaintenanceLogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:EquipMaster.ViewModels.Maintenance"
+        Title="Журнал обслуживания"
+        Height="500" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewModels:MaintenanceLogListViewModel/>
+    </Window.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0"
+                   Text="Журнал обслуживания оборудования"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="0,0,0,20"
+                   HorizontalAlignment="Center"/>
+
+        <!-- Поиск -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Width="300"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Поиск по серийному номеру, модели, типу, исполнителю или результату"/>
+        </StackPanel>
+
+        <!-- Таблица -->
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding LogsView}"
+                  SelectedItem="{Binding SelectedLog}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата"
+                                    Binding="{Binding Date, StringFormat={}{0:dd.MM.yyyy}}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Серийный номер"
+                                    Binding="{Binding Equipment.SerialNumber}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Модель"
+                                    Binding="{Binding Equipment.Model}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Тип"
+                                    Binding="{Binding Equipment.EquipmentType.Name}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Исполнитель"
+                                    Binding="{Binding PerformedBy}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Тип ТО"
+                                    Binding="{Binding MaintenanceType}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Результат ТО"
+                                    Binding="{Binding Result}"
+                                    Width="1.5*"/>
+                <DataGridTextColumn Header="Описание"
+                                    Binding="{Binding Description}"
+                                    Width="3*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+            <Button Content="Добавить"
+                    Width="100" Height="30"
+                    Margin="5,0"
+                    Command="{Binding AddCommand}"/>
+            <Button Content="Редактировать"
+                    Width="100" Height="30"
+                    Margin="5,0"
+                    Command="{Binding EditCommand}"/>
+            <Button Content="Обновить"
+                    Width="100" Height="30"
+                    Margin="5,0"
+                    Command="{Binding RefreshCommand}"/>
+            <Button Content="Закрыть"
+                    Width="100" Height="30"
+                    Margin="5,0"
+                    Command="{Binding CloseCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>
